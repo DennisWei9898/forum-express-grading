@@ -5,7 +5,7 @@ const flash = require('connect-flash')
 const methodOverride = require('method-override')
 const session = require('express-session')
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 const bodyParser = require('body-parser')
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
 app.use(passport.initialize())
