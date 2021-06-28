@@ -23,7 +23,7 @@ if (process.env.NODE_ENV !== 'production') {
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')
   res.locals.error_messages = req.flash('error_messages')
-  res.locals.user = req.user // 加這行
+  res.locals.user = req.user
   next()
 })
 app.listen(port, () => {
