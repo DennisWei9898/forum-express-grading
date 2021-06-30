@@ -21,7 +21,7 @@ git clone https://github.com/your_github_name/forum-express-2020
 cd forum-express
 git remote add upstream https://github.com/ALPHACamp/forum-express-2020.git # 建立上游連線
 
-> > > > > > > origin/A17-test
+> > > > > > > origin/A19-test
 > > > > > > > npm install
 
 ```
@@ -54,12 +54,12 @@ npm run test
 ```
 
 ## 下載作業規格
-以 A17 為例
+以 A19 為例
 
 ```
 
-git checkout -b A17 # 開新分支
-git merge origin/A17-test # 下載作業規格
+git checkout -b A19 # 開新分支
+git merge origin/A19-test # 下載作業規格
 npm run test # 直到綠燈全亮
 
 git add .
@@ -88,12 +88,12 @@ npm run test
 ```
 
 ## 下載作業規格
-以 A17 為例
+以 A19 為例
 
 ```
 
-git checkout -b A17 # 開新分支
-git merge origin/A17-test # 下載作業規格
+git checkout -b A19 # 開新分支
+git merge origin/A19-test # 下載作業規格
 npm run test # 直到綠燈全亮
 
 git add .
@@ -103,10 +103,10 @@ git commit -m "...."
 
 ## 繳交作業
 
->>>>>>> origin/A17-test
+>>>>>>> origin/A19-test
 ```
 
-git push origin A17 # 上傳本地進度
+git push origin A19 # 上傳本地進度
 
 ```
 
