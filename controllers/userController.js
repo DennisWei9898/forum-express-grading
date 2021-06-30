@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs')
-const db = require('../models')
-const User = db.User
+const { User, Comment, Restaurant } = require('../models')
 const helpers = require('../_helpers')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -52,9 +51,21 @@ const userController = {
 
   getUser: async (req, res, next) => {
     try {
-      const user = await User.findByPk(req.params.id)
+      const user = await User.findByPk(req.params.id, {
+        include:[{ model: Comment, include: Restaurant }]
+      })
       if (!user) throw new Error("user isn't exist !!")
-      res.render('profile', { user: user.toJSON() })
+
+      const restaurantInfo = new Map()
+      user.toJSON().Comments.forEach(r => {
+        const id = r.RestaurantId
+        if (restaurantInfo.has(id)) {
+          restaurantInfo.get(id).count++
+        } else {
+          restaurantInfo.set(id, { RestaurantId: id, name: r.Restaurant.name, image: r.Restaurant.image, count: 1 })
+        }
+      })
+      res.render('profile', { user: user.toJSON(), restaurants: [...restaurantInfo.values()] })
     } catch (err) {
       console.log(err)
       next(err)
@@ -85,7 +96,6 @@ const userController = {
       return res.redirect('back')
     }
 
-    const { name, image } = req.body
     const { file } = req
 
     try {
@@ -95,14 +105,17 @@ const userController = {
         imgur.upload(file.path, async (err, img) => {
           if (err) throw new Error('image not found.')
           await user.update({
-            name,
+            name: req.body.name,
             image: file ? img.data.link : user.image
           })
         })
         req.flash('success_msgs', 'user was successfully updated')
         return res.redirect(`/users/${req.params.id}`)
       } else {
-        await user.update({ name, image })
+        await user.update({
+          name: req.body.name,
+          image: user.image 
+        })
         req.flash('success_msgs', 'user was successfully updated')
         return res.redirect(`/users/${req.params.id}`)
       }
