@@ -1,4 +1,4 @@
-function ensureAuthenticated(req) {
+function ensureAuthenticated (req) {
   return req.isAuthenticated();
 }
 
