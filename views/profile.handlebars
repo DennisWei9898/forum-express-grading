@@ -9,11 +9,11 @@
           <h5 class="card-title">{{user.name}}</h5>
           <p class="card-text">{{user.email}}</p>
         </div>
-        {{#if isOwner}}
+        {{#ifCond this.id ../userId}}
         <div class="pr-2">
           <a href="/users/{{ user.id }}/edit" class="btn btn-primary">Edit</a>
         </div>
-        {{/if}}
+        {{/ifCond}}
       </div>
     </div>
   </div>

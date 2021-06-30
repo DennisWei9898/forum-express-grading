@@ -8,5 +8,5 @@ function getUser(req) {
 
 module.exports = {
   ensureAuthenticated,
-  getUser,
+  getUser
 };

@@ -37,6 +37,7 @@ const adminController = {
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
+        if (err) throw new Error('image not found.')
         return Restaurant.create({
           name: req.body.name,
           tel: req.body.tel,
@@ -98,6 +99,7 @@ const adminController = {
     if (file) {
       imgur.setClientID(IMGUR_CLIENT_ID)
       imgur.upload(file.path, (err, img) => {
+        if (err) throw new Error('image not found.')
         return Restaurant.findByPk(req.params.id)
           .then((restaurant) => {
             restaurant.update({
@@ -159,6 +161,20 @@ const adminController = {
             req.flash('success_messages', 'user was successfully to update')
             res.redirect('/admin/users')
           })
+      })
+  },
+  toggleAdmin: (req, res, next) => {
+    User.findByPk(req.params.id)
+      .then(user => {
+        if (!user) throw new Error('User not found.')
+        user.update({ isAdmin: !user.isAdmin })
+      })
+      .then(() => {
+        req.flash('success_msg', 'user was successfully to update')
+        res.redirect('/admin/users')
+      })
+      .catch(error => {
+        next(error)
       })
   }
 }
