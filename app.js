@@ -12,6 +12,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
 app.use(methodOverride('_method'))
+
 // 設定 view engine 使用 handlebars
 app.engine('handlebars', handlebars({
   defaultLayout: 'main',
