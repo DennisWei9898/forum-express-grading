@@ -15,35 +15,36 @@
   </div>
   <div class="col-md-8">
     <p>{{restaurant.description}}</p>
+    <a href="/restaurants/{{ restaurant.id }}/dashboard" class="btn btn-primary mt-2">Dashboard</a>
   </div>
   <hr>
 </div>
-
-
-<br /><br />
-<h3>所有評論：</h3>
+<br />
+<br />
+<h3 class="mb-3">所有評論：</h3>
 {{#each restaurant.Comments}}
-{{#if ../user.isAdmin}}
-<form action="/comments/{{this.id}}?_method=DELETE" method="POST" style="float: right;">
-  <button type="submit" class="btn btn-danger">Delete</button>
-</form>
-{{/if}}
-<blockquote class="blockquote mb-0">
-  <h4><a href="/users/{{this.User.id}}">{{this.User.name}}</a></h4>
-  <p>{{this.text}}</p>
-  <footer class="blockquote-footer">{{moment this.createdAt}}</footer>
+<blockquote class="blockquote d-flex justify-content-between align-items-center px-3">
+  <div>
+    <h4><a href="/users/{{this.User.id}}">{{this.User.name}}</a></h4>
+    <p class="text-break">{{this.text}}</p>
+    <footer class="blockquote-footer"> {{moment this.createdAt}}</footer>
+  </div>
+  {{#if ../user.isAdmin}}
+  <form action="/comments/{{this.id}}?_method=DELETE" method="POST" class="ml-2" onsubmit="return deleteAlert()">
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
+  {{/if}}
+
 </blockquote>
 <hr />
 {{/each}}
 
-<br /><br />
-
-<form action="/comments" method="POST">
+<form action="/comments" method="POST" class="mt-5">
   <div class="form-group">
     <label for="text">留下評論：</label>
     <textarea class="form-control" id="text" name="text" rows="3"></textarea>
   </div>
   <input type="hidden" name="restaurantId" value="{{restaurant.id}}" />
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary mb-4">Submit</button>
 </form>
-<a href="javascript:history.back()">回上一頁</a>
+<a href="javascript:history.back()"><i class="fas fa-undo-alt mr-2"></i>回上一頁</a>
