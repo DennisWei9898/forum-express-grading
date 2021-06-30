@@ -1,16 +1,13 @@
-'use strict';
+'use strict'
 const {
   Model
-} = require('sequelize');
+} = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Restaurant extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
+    static associate (models) {
       // define association here
+      Restaurant.belongsTo(models.Category) // 加入關聯設定
+      Restaurant.hasMany(models.Comment)
     }
   };
   Restaurant.init({
@@ -19,10 +16,11 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.STRING,
     opening_hours: DataTypes.STRING,
     description: DataTypes.TEXT,
-    image: DataTypes.STRING
+    image: DataTypes.STRING,
+    CategoryId: DataTypes.INTEGER // 更新欄位清單
   }, {
     sequelize,
-    modelName: 'Restaurant',
-  });
-  return Restaurant;
-};
+    modelName: 'Restaurant'
+  })
+  return Restaurant
+}
