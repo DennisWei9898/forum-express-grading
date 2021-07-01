@@ -56,7 +56,7 @@ const restController = {
       })
       if (!restaurant) throw new Error('restaurant not found.')
 
-      restaurant.increment('viewCount', { by: 1 })
+      restaurant.increment('viewCounts', { by: 1 })
       console.log(restaurant)
 
       res.render('restaurant', { restaurant: restaurant.toJSON() })
@@ -65,7 +65,7 @@ const restController = {
     }
   },
 
-  getFeedbacks: async (req, res, next) => {
+  getFeeds: async (req, res, next) => {
     try {
       const [restaurants, comments] = await Promise.all([
         Restaurant.findAll({
@@ -84,7 +84,7 @@ const restController = {
         })
       ])
 
-      res.render('feedbacks', { restaurants, comments })
+      res.render('feeds', { restaurants, comments })
     } catch (error) {
       next(error)
     }

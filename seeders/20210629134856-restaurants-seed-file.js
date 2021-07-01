@@ -15,7 +15,7 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
           CategoryId: Math.floor(Math.random() * 6) * 10 + 1,
-          viewCount: 0
+          viewCounts: 0
         })
       ), {})
   },
