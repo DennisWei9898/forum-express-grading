@@ -115,7 +115,7 @@ const userController = {
       } else {
         await user.update({
           name: req.body.name,
-          image: user.image 
+          image: user.image
         })
         req.flash('success_msgs', 'user was successfully updated')
         return res.redirect(`/users/${req.params.id}`)
