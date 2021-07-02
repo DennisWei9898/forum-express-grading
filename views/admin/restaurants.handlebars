@@ -36,9 +36,13 @@
             Edit
           </a>
         </button>
-        <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
-          <button type="submit" class="btn btn-link">Delete</button>
-        </form>
+        {{#if this.isFavorited }}
+        <form action="/favorite/{{this.id}}?_method=DELETE" method="POST"><button type="submit"
+            class="btn btn-danger">移除最愛</button></form>
+        {{else}}
+        <form action="/favorite/{{this.id}}" method="POST"><button type="submit" class="btn btn-primary">加到最愛</button></form>
+        {{/if}}
+
       </td>
     </tr>
     {{/each}}

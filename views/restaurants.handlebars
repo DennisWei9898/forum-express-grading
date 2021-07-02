@@ -30,7 +30,12 @@
           <p class="card-text">{{this.name}}</p>
           <span class="badge badge-secondary">{{this.categoryName}}</span>
           <p class="card-text text-dark">{{this.description}}</p>
-        </div>
+          {{#if this.isFavorited }}
+          <form action="/favorite/{{this.id}}?_method=DELETE" method="POST"><button type="submit"
+              class="btn btn-danger">移除最愛</button></form>
+          {{else}}
+          <form action="/favorite/{{this.id}}" method="POST"><button type="submit" class="btn btn-primary">加到最愛</button></form>
+          {{/if}}
       </a>
     </div>
   </div>
