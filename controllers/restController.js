@@ -1,6 +1,6 @@
 const { Restaurant, Category, User, Comment } = require('../models')
 const pageLimit = 10
-
+const helpers = require('../_helpers')
 const restController = {
   getRestaurants: async (req, res, next) => {
     let offset = 0
@@ -32,7 +32,11 @@ const restController = {
         ...r,
         description: r.description.substring(0, 50),
         categoryName: r.Category.name,
-        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id),
+        isLiked: helpers
+          .getUser(req)
+          .LikedRestaurants.map(d => d.id)
+          .includes(r.id)
       }))
 
       return res.render('restaurants', {
@@ -53,16 +57,18 @@ const restController = {
   getRestaurant: async (req, res, next) => {
     try {
       const restaurant = await Restaurant.findByPk(req.params.id, {
-        include: [Category, { model: User, as: 'FavoritedUsers' }, { model: Comment, include: User }]
+        include: [Category, { model: User, as: 'FavoritedUsers' }, { model: Comment, include: User }, { model: User, as: 'LikedUsers' }]
       })
       if (!restaurant) throw new Error('restaurant not found.')
 
       restaurant.increment('viewCounts', { by: 1 })
       console.log(restaurant)
-      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(helpers.getUser(req).id)
+      const isLiked = restaurant.LikedUsers.map(d => d.id).includes(helpers.getUser(req).id)
       res.render('restaurant', {
         restaurant: restaurant.toJSON(),
-        isFavorited: isFavorited
+        isFavorited: isFavorited,
+        isLiked
       })
     } catch (error) {
       next(error)
