@@ -57,7 +57,8 @@ const restController = {
   getRestaurant: async (req, res, next) => {
     try {
       const restaurant = await Restaurant.findByPk(req.params.id, {
-        include: [Category, { model: User, as: 'FavoritedUsers' }, { model: Comment, include: User }, { model: User, as: 'LikedUsers' }]
+        include: [Category, { model: User, as: 'FavoritedUsers' }, { model: Comment, include: User }, { model: User, as: 'LikedUsers' }],
+        order: [[Comment, 'createdAt', 'DESC']]
       })
       if (!restaurant) throw new Error('restaurant not found.')
 
@@ -113,7 +114,7 @@ const restController = {
       next(error)
     }
   },
-   getTopRestaurants: async (req, res, next) => {
+  getTopRestaurants: async (req, res, next) => {
     try {
       let restaurants = await Restaurant.findAll({
         include: [Category, { model: User, as: 'FavoritedUsers' }]

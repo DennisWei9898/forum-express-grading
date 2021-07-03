@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { User, Comment, Restaurant, Favorite, Like, Followship } = require('../models')
+const { User, Comment, Restaurant, Favorite, Like, Followship, Category } = require('../models')
 const helpers = require('../_helpers')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -52,7 +52,19 @@ const userController = {
   getUser: async (req, res, next) => {
     try {
       const user = await User.findByPk(req.params.id, {
-        include:[{ model: Comment, include: Restaurant }]
+        include: [
+          {
+            model: Comment,
+            attributes: ['id'],
+            include:
+            [
+              { model: Restaurant, attributes: ['id', 'image'] }
+            ]
+          },
+          { model: User, as: 'Followers', attributes: ['image', 'id'] },
+          { model: User, as: 'Followings', attributes: ['image', 'id'] },
+          { model: Restaurant, include: Category, as: 'FavoritedRestaurants', attributes: ['image', 'id'] }
+        ]
       })
       if (!user) throw new Error("user isn't exist !!")
 
