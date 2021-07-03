@@ -125,28 +125,27 @@ const userController = {
       next(err)
     }
   },
-  addFavorite: (req, res) => {
-    return Favorite.create({
-      UserId: req.user.id,
-      RestaurantId: req.params.restaurantId
-    })
-      .then((restaurant) => {
-        return res.redirect('back')
-      })
+  addFavorite: async (req, res, next) => {
+    try {
+      await Favorite.create({ UserId: helpers.getUser(req).id, RestaurantId: req.params.restaurantId })
+      res.redirect('back')
+    } catch (error) {
+      next(error)
+    }
   },
-  removeFavorite: (req, res) => {
-    return Favorite.findOne({
-      where: {
-        UserId: req.user.id,
-        RestaurantId: req.params.restaurantId
-      }
-    })
-      .then((favorite) => {
-        favorite.destroy()
-          .then((restaurant) => {
-            return res.redirect('back')
-          })
+
+  removeFavorite: async (req, res, next) => {
+    try {
+      const favorite = await Favorite.findOne({
+        where: { UserId: helpers.getUser(req).id, RestaurantId: req.params.restaurantId }
       })
+      if (!favorite) throw new Error('favorite not found.')
+
+      await favorite.destroy()
+      res.redirect('back')
+    } catch (error) {
+      next(error)
+    }
   },
   addLike: async (req, res, next) => {
     try {
@@ -190,27 +189,36 @@ const userController = {
       return res.render('topUser', { users: users })
     })
   },
-  addFollowing: (req, res) => {
-    return Followship.create({
-      followerId: req.user.id,
-      followingId: req.params.userId
-    })
-      .then((followship) => {
-        return res.redirect('back')
-      })
+  addFollowing: async (req, res, next) => {
+    if (Number(req.params.userId) === req.user.id) {
+      req.flash('warning_msg', '你無法追蹤自己')
+      return res.redirect(`/users/top`)
+    }
+
+    try {
+      await Followship.create({ followerId: req.user.id, followingId: req.params.userId })
+      res.redirect('back')
+    } catch (error) {
+      next(error)
+    }
   },
 
-  removeFollowing: (req, res) => {
-    return Followship.findOne({where: {
-      followerId: req.user.id,
-      followingId: req.params.userId
-    }})
-      .then((followship) => {
-        followship.destroy()
-          .then((followship) => {
-            return res.redirect('back')
-          })
+  removeFollowing: async (req, res, next) => {
+    if (Number(req.params.userId) === req.user.id) {
+      req.flash('warning_msg', '你無法取消追蹤自己')
+      return res.redirect('/users/top')
+    }
+    try {
+      const followship = await Followship.findOne({
+        where: { followerId: req.user.id, followingId: req.params.userId }
       })
+      if (!followship) throw new Error('followship not found.')
+
+      await followship.destroy()
+      res.redirect('back')
+    } catch (error) {
+      next(error)
+    }
   }
 }
 

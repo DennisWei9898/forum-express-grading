@@ -25,6 +25,10 @@ module.exports = (app, passport) => {
     }
     res.redirect('/signin')
   }
+
+  // topUser
+  app.get('/restaurants/top', authenticated, restController.getTopRestaurants)
+
   // feedbackPage
   app.get('/restaurants/feeds', authenticated, restController.getFeeds)
 
