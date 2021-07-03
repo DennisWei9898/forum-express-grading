@@ -39,6 +39,7 @@ passport.deserializeUser((id, cb) => {
     user = user.toJSON()
     return cb(null, user)
   })
+  .catch(err => done(err, null)
 })
 
 module.exports = passport
