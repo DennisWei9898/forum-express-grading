@@ -1,12 +1,18 @@
 const express = require('express')
-const passport = require('./config/passport')
 const handlebars = require('express-handlebars')
 const flash = require('connect-flash')
 const methodOverride = require('method-override')
 const session = require('express-session')
 const app = express()
 const port = process.env.PORT || 3000
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+const passport = require('./config/passport')
+
 const bodyParser = require('body-parser')
+
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -22,9 +28,7 @@ app.set('view engine', 'handlebars')
 app.use('/upload', express.static(__dirname + '/upload'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
-}
+
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')
   res.locals.error_messages = req.flash('error_messages')
