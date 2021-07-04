@@ -1,22 +1,19 @@
-const { Category } = require('../models')
+const db = require('../models')
+const Category = db.Category
 
-const categoryController = {
-  getCategories: async (req, res, next, callback) => {
-    try {
-      const categories = await Category.findAll({ raw: true, nest: true })
-
+let categoryService = {
+  getCategories: (req, res, callback) => {
+    return Category.findAll().then(categories => {
       if (req.params.id) {
-        const category = await Category.findByPk(req.params.id)
-        if (!category) throw new Error('category not found.')
-
-        callback({ categories, category: category.toJSON() })
+        Category.findByPk(req.params.id)
+          .then((category) => {
+            return res.render('admin/categories', { categories: categories, category: category })
+          })
       } else {
-        callback({ categories })
+        callback({ categories: categories })
+
       }
-    } catch (error) {
-      next(error)
-    }
+    })
   }
 }
-
-module.exports = categoryController
+module.exports = categoryService

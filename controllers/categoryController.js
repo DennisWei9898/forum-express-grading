@@ -1,13 +1,14 @@
 const db = require('../models')
 const Category = db.Category
-const categoryService = require('../services/categoryService')
-const categoryController = {
-  getCategories: (req, res, next) => {
-    categoryService.getCategories(req, res, next, data => {
-      res.render('admin/categories', data)
+
+const categoryService = require('../services/categoryService.js')
+
+let categoryController = {
+  getCategories: (req, res) => {
+    categoryService.getCategories(req, res, (data) => {
+      return res.render('admin/categories', data)
     })
   },
-
   postCategory: (req, res) => {
     if (!req.body.name) {
       req.flash('error_messages', 'name didn\'t exist')
@@ -45,4 +46,5 @@ const categoryController = {
       })
   }
 }
+
 module.exports = categoryController

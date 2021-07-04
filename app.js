@@ -21,6 +21,7 @@ app.engine('handlebars', handlebars({
 app.set('view engine', 'handlebars')
 app.use('/upload', express.static(__dirname + '/upload'))
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
